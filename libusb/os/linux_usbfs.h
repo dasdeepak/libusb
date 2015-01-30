@@ -135,5 +135,7 @@ struct usbfs_hub_portinfo {
 #define IOCTL_USBFS_CLEAR_HALT	_IOR('U', 21, unsigned int)
 #define IOCTL_USBFS_DISCONNECT	_IO('U', 22)
 #define IOCTL_USBFS_CONNECT	_IO('U', 23)
+#define IOCTL_USBFS_CLAIM_PORT		_IOR('U', 24, unsigned int)
+#define IOCTL_USBFS_RELEASE_PORT	_IOR('U', 25, unsigned int)
 
 #endif

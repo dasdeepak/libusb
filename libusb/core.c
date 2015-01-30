@@ -1355,6 +1355,36 @@ out:
 	return r;
 }
 
+int API_EXPORTED libusb_claim_port(libusb_device_handle *dev,
+        int port_number)
+{
+        int r = 0;
+
+        usbi_dbg("port %d", port_number);
+
+        usbi_mutex_lock(&dev->lock);
+
+        if (usbi_backend->claim_port)
+		r = usbi_backend->claim_port(dev, port_number);
+        usbi_mutex_unlock(&dev->lock);
+        return r;
+}
+
+int API_EXPORTED libusb_release_port(libusb_device_handle *dev,
+        int port_number)
+{
+        int r = 0;
+
+        usbi_dbg("port %d", port_number);
+
+        usbi_mutex_lock(&dev->lock);
+
+        if (usbi_backend->release_port)
+                r = usbi_backend->release_port(dev, port_number);
+        usbi_mutex_unlock(&dev->lock);
+        return r;
+}
+
 /** \ingroup dev
  * Activate an alternate setting for an interface. The interface must have
  * been previously claimed with libusb_claim_interface().

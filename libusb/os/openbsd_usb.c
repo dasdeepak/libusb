@@ -104,6 +104,8 @@ const struct usbi_os_backend openbsd_backend = {
 
 	obsd_claim_interface,
 	obsd_release_interface,
+	NULL,
+	NULL,
 
 	obsd_set_interface_altsetting,
 	obsd_clear_halt,

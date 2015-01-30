@@ -1723,6 +1723,8 @@ const struct usbi_os_backend darwin_backend = {
 	.set_configuration = darwin_set_configuration,
 	.claim_interface = darwin_claim_interface,
 	.release_interface = darwin_release_interface,
+	.claim_port = NULL,
+        .release_port = NULL,
 
 	.set_interface_altsetting = darwin_set_interface_altsetting,
 	.clear_halt = darwin_clear_halt,

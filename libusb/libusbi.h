@@ -722,6 +722,10 @@ struct usbi_os_backend {
 	 */
 	int (*release_interface)(struct libusb_device_handle *handle, int interface_number);
 
+	int (*claim_port)(struct libusb_device_handle *handle, int port_number);
+
+	int (*release_port)(struct libusb_device_handle *handle, int port_number);
+
 	/* Set the alternate setting for an interface.
 	 *
 	 * You will only ever be asked to set the alternate setting for an

@@ -1335,6 +1335,40 @@ static int op_release_interface(struct libusb_device_handle *handle, int iface)
 	return 0;
 }
 
+static int op_claim_port(struct libusb_device_handle *handle, int port)
+{
+        int fd = _device_handle_priv(handle)->fd;
+        int r = ioctl(fd, IOCTL_USBFS_CLAIM_PORT, &port);
+        if (r) {
+                if (errno == ENOENT)
+                        return LIBUSB_ERROR_NOT_FOUND;
+                else if (errno == EBUSY)
+                        return LIBUSB_ERROR_BUSY;
+                else if (errno == ENODEV)
+                        return LIBUSB_ERROR_NO_DEVICE;
+
+                usbi_err(HANDLE_CTX(handle),
+                        "claim port failed, error %d errno %d", r, errno);
+                return LIBUSB_ERROR_OTHER;
+        }
+        return 0;
+}
+
+static int op_release_port(struct libusb_device_handle *handle, int port)
+{
+        int fd = _device_handle_priv(handle)->fd;
+        int r = ioctl(fd, IOCTL_USBFS_RELEASE_PORT, &port);
+        if (r) {
+                if (errno == ENODEV)
+                        return LIBUSB_ERROR_NO_DEVICE;
+
+                usbi_err(HANDLE_CTX(handle),
+                        "release port failed, error %d errno %d", r, errno);
+                return LIBUSB_ERROR_OTHER;
+        }
+        return 0;
+}
+
 static int op_set_interface(struct libusb_device_handle *handle, int iface,
 	int altsetting)
 {
@@ -2407,6 +2441,8 @@ const struct usbi_os_backend linux_usbfs_backend = {
 	.set_configuration = op_set_configuration,
 	.claim_interface = op_claim_interface,
 	.release_interface = op_release_interface,
+	.claim_port = op_claim_port,
+        .release_port = op_release_port,
 
 	.set_interface_altsetting = op_set_interface,
 	.clear_halt = op_clear_halt,
